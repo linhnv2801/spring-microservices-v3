@@ -1,0 +1,3 @@
+[submodule "03.microservices/git-localconfig-repo"]
+	path = 03.microservices/git-localconfig-repo
+	url = https://github.com/linhnv2801/git-localconfig-repo.git
