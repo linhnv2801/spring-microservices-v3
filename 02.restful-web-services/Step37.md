@@ -15,7 +15,7 @@ Current Directory : /Users/ranga/Ranga/git/00.courses/spring-microservices-v2/02
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.0</version>
+		<version>3.2.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.in28minutes.rest.webservices</groupId>
@@ -24,7 +24,7 @@ Current Directory : /Users/ranga/Ranga/git/00.courses/spring-microservices-v2/02
 	<name>restful-web-services</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -69,7 +69,7 @@ Current Directory : /Users/ranga/Ranga/git/00.courses/spring-microservices-v2/02
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.0.0</version>
+			<version>2.3.0</version>
 		</dependency>
 
 		<dependency>
@@ -91,10 +91,20 @@ Current Directory : /Users/ranga/Ranga/git/00.courses/spring-microservices-v2/02
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency> -->
+        
+        <!-- Deprecated below mysql dependency from Spring Boot:3.1.x -->
+        <!--
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+		-->
+
+        <!-- Starting from Spring Boot 3.1.x -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -184,7 +194,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
 				ex.getMessage(), request.getDescription(false));
 		
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 		
 	}
 
@@ -193,7 +203,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
 				ex.getMessage(), request.getDescription(false));
 		
-		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
 		
 	}
 	
@@ -517,10 +527,12 @@ public class SpringSecurityConfiguration {
 				auth -> auth.anyRequest().authenticated()
 				);
 //		2) If a request is not authenticated, a web page is shown
-		http.httpBasic(withDefaults());
+		// http.httpBasic(withDefaults()); // Deprecated in SB 3.1.x
+        http.httpBasic(withDefaults()); // Starting from Spring Boot 3.1.x
 		
 //		3) CSRF -> POST, PUT
-		http.csrf().disable();
+        // http.csrf().disable(); // Deprecated in SB 3.1.x
+        http.csrf(csrf -> csrf.disable()); // Starting from Spring Boot 3.1.x
 
 		
 		return http.build();
